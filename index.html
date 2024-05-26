@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>汇率转换器</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="converter">
+        <h1>汇率转换器</h1>
+        <div id="setup-section" style="display: none;">
+            <div class="input-section">
+                <input type="text" id="api-key" placeholder="输入您的API Key" />
+                <button id="save-button" class="button">保存</button>
+            </div>
+        </div>
+        <div id="main-section" style="display: none;">
+            <div class="input-section">
+                <input type="number" id="amount" placeholder="输入金额" />
+                <div class="currency-selectors">
+                    <select id="from-currency">
+                    </select>
+                    <span>↔</span>
+                    <select id="to-currency">
+                    </select>
+                </div>
+            </div>
+            <div class="output-section">
+                <h2>转换结果</h2>
+                <p id="converted-amount">0</p>
+            </div>
+        </div>
+    </div>
+    <footer>
+        数据来源：<a href="https://app.exchangerate-api.com/">ExchangeRate-API</a> | 作者：<a href="https://rong6.cn">荣6呀</a> | 鸣谢：<a href="https://chatgpt.com/">ChatGPT</a><br>
+        去<a href="https://github.com/rong6/utools-plugin-ExchangeRate-Conversion">GitHub</a>点个Star~ | <a href="">使用教程</a> | <a href="#" id="change-key-link">更改API Key</a>
+    </footer>
+    <script src="script.js"></script>
+</body>
+
+</html>

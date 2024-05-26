@@ -1,0 +1,11 @@
+{
+	"main": "index.html",
+	"logo": "logo.png",
+	"features": [
+		{
+		  "code": "ExchangeRate",
+		  "explain": "汇率转换",
+			"cmds":["汇率", "汇率转换", "转换", "exchangerate"]
+		}
+	]
+}
