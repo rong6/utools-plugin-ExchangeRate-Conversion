@@ -1,4 +1,3 @@
-// script.js
 document.addEventListener('DOMContentLoaded', () => {
     const apiKeyInput = document.getElementById('api-key');
     const saveButton = document.getElementById('save-button');
@@ -91,4 +90,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
         }
     }
+
+    // 使用utools.shellOpenExternal打开外部链接
+    document.querySelectorAll('.external-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const url = e.target.href;
+            utools.shellOpenExternal(url);
+        });
+    });
 });
