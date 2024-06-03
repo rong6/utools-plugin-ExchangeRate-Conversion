@@ -8,24 +8,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const toCurrency = document.getElementById('to-currency');
     const convertedAmount = document.getElementById('converted-amount');
     const changeKeyLink = document.getElementById('change-key-link');
+    const toggleThemeLink = document.getElementById('toggle-theme-link');
 
     const priorityCurrencies = ['CNY', 'USD', 'JPY', 'HKD', 'EUR', 'TWD', 'GBP'];
 
-    // 读取本地存储中的API Key
-    const storedApiKey = localStorage.getItem('exchangeRateApiKey');
-    if (storedApiKey) {
-        initializeApp(storedApiKey);
-    } else {
+    // 读取数据库中的API Key
+    utools.db.promises.get('apiKey').then(storedApiKey => {
+        if (storedApiKey) {
+            initializeApp(storedApiKey.data);
+        } else {
+            setupSection.style.display = 'block';
+        }
+    }).catch(error => {
+        console.error('Error retrieving API key:', error);
         setupSection.style.display = 'block';
-    }
+    });
 
-    // 保存API Key到本地存储
-    saveButton.addEventListener('click', () => {
+    // 保存API Key到数据库
+    saveButton.addEventListener('click', async () => {
         const apiKey = apiKeyInput.value;
         if (apiKey) {
-            localStorage.setItem('exchangeRateApiKey', apiKey);
-            setupSection.style.display = 'none';
-            initializeApp(apiKey);
+            try {
+                await utools.db.promises.put({
+                    _id: 'apiKey',
+                    data: apiKey
+                });
+                setupSection.style.display = 'none';
+                initializeApp(apiKey);
+            } catch (error) {
+                console.error('Error saving API key:', error);
+            }
         } else {
             alert('请输入有效的API Key');
         }
@@ -35,6 +47,13 @@ document.addEventListener('DOMContentLoaded', () => {
     changeKeyLink.addEventListener('click', () => {
         mainSection.style.display = 'none';
         setupSection.style.display = 'block';
+    });
+
+    // 切换黑暗模式
+    toggleThemeLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.body.classList.toggle('dark-mode');
+        utools.dbStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
     });
 
     function initializeApp(apiKey) {
@@ -89,14 +108,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     convertedAmount.textContent = `${result} ${to}`;
                 });
         }
+
+        // 读取数据库中的主题设置
+        const storedTheme = utools.dbStorage.getItem('theme');
+        if (storedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
     }
 
     // 使用utools.shellOpenExternal打开外部链接
     document.querySelectorAll('.external-link').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            const url = e.target.href;
-            utools.shellOpenExternal(url);
+            utools.shellOpenExternal(e.target.href);
         });
     });
 });
